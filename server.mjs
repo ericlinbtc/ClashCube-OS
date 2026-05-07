@@ -20,6 +20,8 @@ const contentTypes = {
   ".svg": "image/svg+xml",
 };
 
+const appRouteIds = new Set(["overview", "workflow", "skills", "projects", "knowledge", "config", "subscription"]);
+
 function send(response, status, body, headers = {}) {
   response.writeHead(status, headers);
   response.end(body);
@@ -72,6 +74,15 @@ async function serveStatic(response, url) {
       "cache-control": "no-store",
     });
   } catch {
+    const routeId = url.pathname.replace(/^\/+|\/+$/g, "").split("/")[0];
+    if (!extname(url.pathname) && appRouteIds.has(routeId)) {
+      const body = await readFile(join(root, "index.html"));
+      send(response, 200, body, {
+        "content-type": contentTypes[".html"],
+        "cache-control": "no-store",
+      });
+      return;
+    }
     send(response, 404, "Not found", { "content-type": "text/plain; charset=utf-8" });
   }
 }

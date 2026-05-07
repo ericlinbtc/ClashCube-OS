@@ -38,11 +38,22 @@ const industries = [
 ];
 
 const EXECUTION_STYLE_LABELS = {
-  balanced: "均衡执行",
-  creative: "创意优先",
-  strict: "严格复核",
-  fast: "快速交付",
+  balanced: "标准模式",
+  creative: "创意模式",
+  strict: "深度模式",
+  fast: "快速模式",
 };
+
+const DISCUSSION_ROLE_EXAMPLES = [
+  "法务负责人",
+  "财务分析师",
+  "运营主管",
+  "产品经理",
+  "销售总监",
+  "风控专员",
+  "招聘经理",
+  "品牌策划",
+];
 
 function executionStyleLabel(key) {
   return EXECUTION_STYLE_LABELS[key] || key || "";
@@ -55,9 +66,9 @@ const subscriptionPlans = [
     price: "¥0",
     quota: 30,
     used: 9,
-    description: "每日赠送基础额度，并开放个别行业。",
+    description: "每日赠送基础 Token，并开放个别行业。",
     industries: ["media", "legal"],
-    features: ["每日 30 点额度", "开放 2 个行业", "平台推荐模板"],
+    features: ["每日 30 Token", "开放 2 个行业", "平台推荐模板"],
   },
   {
     id: "basic",
@@ -65,9 +76,9 @@ const subscriptionPlans = [
     price: "¥99/月",
     quota: 500,
     used: 120,
-    description: "固定赠送额度，开放多个高频业务行业。",
+    description: "固定赠送 Token，开放多个高频业务行业。",
     industries: ["media", "legal", "finance", "ecommerce", "marketing", "hr"],
-    features: ["每月 500 点额度", "开放 6 个行业", "保存我的模板"],
+    features: ["每月 500 Token", "开放 6 个行业", "保存我的模板"],
   },
   {
     id: "pro",
@@ -75,9 +86,9 @@ const subscriptionPlans = [
     price: "¥299/月",
     quota: 2000,
     used: 640,
-    description: "固定赠送高额度，并开放全部行业。",
+    description: "固定赠送高 Token，并开放全部行业。",
     industries: industries.map(([value]) => value),
-    features: ["每月 2000 点额度", "开放所有行业", "多节点讨论"],
+    features: ["每月 2000 Token", "开放所有行业", "多节点讨论"],
   },
   {
     id: "enterprise",
@@ -345,21 +356,21 @@ function industryName(key = state.industry) {
   return industries.find(([value]) => value === key)?.[1] || key;
 }
 
-/** 行业标签色：与 styles.css 一致；主强调为亮绿色 `--palette-cyan-bright`（#5cff9d） */
+/** 行业标签色：与 styles.css 一致；主强调为亮绿色 `--palette-cyan-bright`（#00FF84） */
 const templateIndustryTagPalette = {
-  media: { bg: "rgba(92, 255, 157, 0.13)", border: "rgba(92, 255, 157, 0.46)", text: "#ecfeff" },
+  media: { bg: "rgba(0, 255, 132, 0.13)", border: "rgba(0, 255, 132, 0.46)", text: "#ecfeff" },
   legal: { bg: "rgba(148, 163, 184, 0.14)", border: "rgba(148, 163, 184, 0.38)", text: "#e2e8f0" },
-  finance: { bg: "rgba(92, 255, 157, 0.12)", border: "rgba(92, 255, 157, 0.38)", text: "#c8f6d9" },
+  finance: { bg: "rgba(0, 255, 132, 0.12)", border: "rgba(0, 255, 132, 0.38)", text: "#c8f6d9" },
   ecommerce: { bg: "rgba(100, 116, 139, 0.18)", border: "rgba(100, 116, 139, 0.38)", text: "#cbd5e1" },
-  marketing: { bg: "rgba(200, 246, 217, 0.11)", border: "rgba(92, 255, 157, 0.42)", text: "#c8f6d9" },
-  hr: { bg: "rgba(92, 255, 157, 0.10)", border: "rgba(34, 214, 111, 0.38)", text: "#c8f6d9" },
+  marketing: { bg: "rgba(200, 246, 217, 0.11)", border: "rgba(0, 255, 132, 0.42)", text: "#c8f6d9" },
+  hr: { bg: "rgba(0, 255, 132, 0.10)", border: "rgba(34, 214, 111, 0.38)", text: "#c8f6d9" },
   trade: { bg: "rgba(15, 122, 67, 0.12)", border: "rgba(34, 214, 111, 0.38)", text: "#c8f6d9" },
   education: { bg: "rgba(71, 85, 105, 0.22)", border: "rgba(148, 163, 184, 0.40)", text: "#f1f5f9" },
-  healthcare: { bg: "rgba(15, 122, 67, 0.14)", border: "rgba(92, 255, 157, 0.36)", text: "#c8f6d9" },
+  healthcare: { bg: "rgba(15, 122, 67, 0.14)", border: "rgba(0, 255, 132, 0.36)", text: "#c8f6d9" },
   manufacturing: { bg: "rgba(51, 65, 85, 0.24)", border: "rgba(148, 163, 184, 0.36)", text: "#e2e8f0" },
-  property: { bg: "rgba(15, 122, 67, 0.12)", border: "rgba(92, 255, 157, 0.38)", text: "#e7ffef" },
-  quant: { bg: "rgba(15, 122, 67, 0.18)", border: "rgba(92, 255, 157, 0.42)", text: "#c8f6d9" },
-  mine: { bg: "rgba(92, 255, 157, 0.15)", border: "rgba(200, 246, 217, 0.46)", text: "#ecfeff" },
+  property: { bg: "rgba(15, 122, 67, 0.12)", border: "rgba(0, 255, 132, 0.38)", text: "#e7ffef" },
+  quant: { bg: "rgba(15, 122, 67, 0.18)", border: "rgba(0, 255, 132, 0.42)", text: "#c8f6d9" },
+  mine: { bg: "rgba(0, 255, 132, 0.15)", border: "rgba(200, 246, 217, 0.46)", text: "#ecfeff" },
   default: { bg: "rgba(148, 163, 184, 0.12)", border: "rgba(148, 163, 184, 0.32)", text: "#e2e8f0" },
 };
 
@@ -661,7 +672,7 @@ function nodeMachineIpDisplay(node) {
 
 /** 仅这些模型不展示「API Key」；其余选项需填写 API Key */
 const PLATFORM_AI_MODEL_IDS = new Set([
-  "maxmini",
+  "qwen",
 ]);
 
 function isPlatformAiModelValue(modelId) {
@@ -727,16 +738,22 @@ const personalTemplateBlueprints = [
 
 const MAX_TEMPLATE_ICON_BYTES = 512 * 1024;
 
-const TEMPLATE_ICON_SVG_MINE = `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06zM17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83a.996.996 0 000-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.73z"/></svg>`;
+const TEMPLATE_ICON_LOGO_MARKUP = `<span class="template-card-icon-logo">OC</span>`;
 
 /** 平台模版：按行业 + 标题生成与技能中心一致的多彩图标（渐变底 + 几何图形） */
+function platformTemplateIconDescriptor(industryKey) {
+  const normalizedIndustry = String(industryKey || "default").trim() || "default";
+  const fingerprint = skillIconFingerprint(normalizedIndustry, "platform-template", 0);
+  return {
+    tone: fingerprint % 12,
+    glyph: SKILL_ICON_GLYPHS[fingerprint % SKILL_ICON_GLYPHS.length],
+  };
+}
+
 function renderPlatformTemplateIconMarkup(template) {
-  const industryKey = template.industry || "all";
-  const seed = `${template.id || ""}\0${template.title || ""}`;
-  const fp = skillIconFingerprint(industryKey, seed, 0);
-  const tone = fp % 12;
-  const glyph = SKILL_ICON_GLYPHS[fp % SKILL_ICON_GLYPHS.length];
-  return `<span class="skill-toggle-icon skill-icon-tone-${tone}" aria-hidden="true">${glyph}</span>`;
+  const industryKey = template.industry || "default";
+  const { tone, glyph } = platformTemplateIconDescriptor(industryKey);
+  return `<span class="skill-toggle-icon platform-template-icon platform-icon-tone-${tone}" aria-hidden="true">${glyph}</span>`;
 }
 
 function renderTemplateCardIconInnerHtml(template) {
@@ -747,7 +764,7 @@ function renderTemplateCardIconInnerHtml(template) {
   if (!isMine) {
     return renderPlatformTemplateIconMarkup(template);
   }
-  return `<span class="template-card-icon-default">${TEMPLATE_ICON_SVG_MINE}</span>`;
+  return TEMPLATE_ICON_LOGO_MARKUP;
 }
 
 function renderTemplateCardIconBlockHtml(template) {
@@ -1063,7 +1080,7 @@ function renderOverview() {
   const sidebarPlan = $("#sidebar-plan");
   if (sidebarPlan) sidebarPlan.textContent = plan.name;
   const sidebarQuota = $("#sidebar-quota");
-  if (sidebarQuota) sidebarQuota.textContent = `${plan.quota} 点额度`;
+  if (sidebarQuota) sidebarQuota.textContent = `${plan.quota} Token`;
   const activePlanLabel = $("#active-plan-label");
   if (activePlanLabel) activePlanLabel.textContent = `当前：${plan.name}`;
 }
@@ -1076,7 +1093,7 @@ function renderOverviewCharts() {
     "linear-gradient(180deg, #64748b, #334155)",
     "linear-gradient(180deg, #22d66f, #0f7a43)",
     "linear-gradient(180deg, #94a3b8, #475569)",
-    "linear-gradient(180deg, #5cff9d, #18b85f)",
+    "linear-gradient(180deg, #00FF84, #18b85f)",
     "linear-gradient(180deg, #cbd5e1, #64748b)",
     "linear-gradient(180deg, #18b85f, #155e75)",
     "linear-gradient(180deg, #c8f6d9, #0f7a43)",
@@ -1224,24 +1241,30 @@ function renderNodes() {
 function renderDiscussionNodePicker() {
   const discussionLabel = $("#discussion-node-field-label");
   if (discussionLabel) {
-    discussionLabel.textContent = state.nodes.length
-      ? `参与节点（${state.nodes.length} 个可选）`
-      : "参与节点";
+    discussionLabel.textContent = `参与节点（当前 ${state.nodes.length} 个节点）`;
   }
   const discussionPicker = $("#discussion-node-picker");
   if (!discussionPicker) return;
-  discussionPicker.classList.toggle("discussion-node-picker--scroll", state.nodes.length > 8);
+  discussionPicker.classList.toggle("discussion-node-picker--scroll", state.nodes.length > 6);
   discussionPicker.innerHTML = state.nodes.length
-    ? state.nodes.map((node) => `
-    <label class="discussion-node-option">
-      <input type="checkbox" name="participant_node_ids" value="${escapeHtml(node.node_id)}">
-      <span class="discussion-node-option-body">
-        <strong>${escapeHtml(overviewNodeCardTitle(node))}</strong>
-        <small class="discussion-node-meta">机器 IP：${escapeHtml(nodeMachineIpDisplay(node))}</small>
-      </span>
-    </label>
+    ? state.nodes.map((node, index) => `
+    <div class="discussion-node-option">
+      <label class="discussion-node-option-select">
+        <input type="checkbox" name="participant_node_ids" value="${escapeHtml(node.node_id)}">
+        <span class="discussion-node-option-body">
+          <strong>${escapeHtml(overviewNodeCardTitle(node))}</strong>
+          <small class="discussion-node-meta">机器 IP：${escapeHtml(nodeMachineIpDisplay(node))}</small>
+        </span>
+      </label>
+      <input
+        class="discussion-role-input"
+        type="text"
+        name="participant_role_${escapeHtml(node.node_id)}"
+        placeholder="输入该节点代表的职业，例如：${escapeHtml(DISCUSSION_ROLE_EXAMPLES[index % DISCUSSION_ROLE_EXAMPLES.length])}"
+      >
+    </div>
   `).join("")
-    : `<p class="discussion-node-empty">当前工作台暂无节点。请先在「节点配置」中添加或接入节点，列表会自动出现在此处，再勾选参与讨论。</p>`;
+    : `<p class="discussion-node-empty">当前工作台暂无节点。请先在「节点配置」中添加或接入节点，再为节点填写职业描述并发起讨论。</p>`;
 }
 
 function renderWorkflowControls() {
@@ -1415,7 +1438,7 @@ function renderKnowledgeIndustrySelect() {
   if (!select) return;
   const currentValue = String(select.value || "通用").trim();
   const options = [
-    ["通用", "通用"],
+    ["通用", "全部行业"],
     ...industries.map(([, label]) => [label, label]),
   ];
   select.innerHTML = options.map(([value, label]) => `
@@ -1427,7 +1450,10 @@ function renderKnowledgeIndustrySelect() {
 
 function availableKnowledgeIndustries() {
   const knownOrder = new Map(["通用", ...industries.map(([, label]) => label)].map((label, index) => [label, index]));
-  return [...new Set(state.knowledgeItems.map((item) => item.industry).filter(Boolean))]
+  return [...new Set([
+    ...industries.map(([, label]) => label),
+    ...state.knowledgeItems.map((item) => item.industry).filter(Boolean),
+  ])]
     .sort((a, b) => {
       const aRank = knownOrder.has(a) ? knownOrder.get(a) : Number.MAX_SAFE_INTEGER;
       const bRank = knownOrder.has(b) ? knownOrder.get(b) : Number.MAX_SAFE_INTEGER;
@@ -1439,7 +1465,7 @@ function availableKnowledgeIndustries() {
 function renderKnowledgeIndustryFilter() {
   const container = $("#knowledge-industry-filter");
   if (!container) return;
-  const options = ["all", ...availableKnowledgeIndustries()];
+  const options = ["all", ...availableKnowledgeIndustries().filter((value) => value !== "通用")];
   if (!options.includes(state.knowledgeIndustryFilter)) {
     state.knowledgeIndustryFilter = "all";
   }
@@ -1527,11 +1553,11 @@ function renderKnowledgeBase() {
       aria-label="查看知识资料 ${escapeHtml(item.title)}">
       <div class="knowledge-row-head">
         <strong>${escapeHtml(item.title)}</strong>
-        <span>${escapeHtml(knowledgeCategoryLabel(item.category))}</span>
+        <span>${escapeHtml(item.industry)}</span>
       </div>
       <p>${escapeHtml(item.summary)}</p>
       <div class="knowledge-meta-line">
-        <span>${escapeHtml(item.industry)}</span>
+        <span>${escapeHtml(knowledgeCategoryLabel(item.category))}</span>
         <span>${escapeHtml(item.updatedAt)}</span>
       </div>
     </article>
@@ -1908,7 +1934,17 @@ function wireAutoCustomSelects() {
   });
 }
 
-const moduleIds = ["overview", "workflow", "skills", "projects", "knowledge", "config", "subscription"];
+const moduleRoutes = [
+  { id: "overview", path: "/overview", title: "仪表盘" },
+  { id: "workflow", path: "/workflow", title: "工作模版" },
+  { id: "skills", path: "/skills", title: "行业技能" },
+  { id: "projects", path: "/projects", title: "我的项目" },
+  { id: "knowledge", path: "/knowledge", title: "知识库" },
+  { id: "config", path: "/config", title: "节点配置" },
+  { id: "subscription", path: "/subscription", title: "订阅服务" },
+];
+const moduleIds = moduleRoutes.map((route) => route.id);
+const moduleRouteMap = new Map(moduleRoutes.map((route) => [route.id, route]));
 const moduleAliases = {
   nodes: "overview",
   templates: "workflow",
@@ -1917,6 +1953,28 @@ const moduleAliases = {
 
 function normalizeModuleId(sectionId) {
   return moduleIds.includes(sectionId) ? sectionId : (moduleAliases[sectionId] || "overview");
+}
+
+function moduleIdFromLocation(location = window.location) {
+  const hashRoute = location.hash.replace(/^#\/?/, "").split(/[/?]/)[0];
+  if (hashRoute) return normalizeModuleId(hashRoute);
+  const pathRoute = decodeURIComponent(location.pathname || "")
+    .replace(/^\/+|\/+$/g, "")
+    .split("/")[0];
+  return normalizeModuleId(pathRoute || "overview");
+}
+
+function routePathForModule(moduleId) {
+  return moduleRouteMap.get(normalizeModuleId(moduleId))?.path || "/overview";
+}
+
+function syncBrowserRoute(moduleId, { replace = false } = {}) {
+  const path = routePathForModule(moduleId);
+  const nextUrl = `${path}${window.location.search || ""}`;
+  const currentUrl = `${window.location.pathname}${window.location.search || ""}`;
+  if (currentUrl === nextUrl && !window.location.hash) return;
+  const method = replace ? "replaceState" : "pushState";
+  history[method]({ moduleId }, "", nextUrl);
 }
 
 function showWorkflowTab(name) {
@@ -1936,19 +1994,27 @@ function showWorkflowTab(name) {
 
 function switchModule(sectionId, options = {}) {
   const moduleId = normalizeModuleId(sectionId);
+  const route = moduleRouteMap.get(moduleId);
   state.activeModule = moduleId;
   $$(".nav-item").forEach((item) => {
     item.classList.toggle("active", item.dataset.section === moduleId);
+    if (item.dataset.section === moduleId) {
+      item.setAttribute("aria-current", "page");
+    } else {
+      item.removeAttribute("aria-current");
+    }
   });
   $$("[data-module-panel]").forEach((panel) => {
     panel.classList.toggle("active", panel.dataset.modulePanel === moduleId);
   });
+  document.body.dataset.activeModule = moduleId;
+  document.title = route ? `${route.title} · ClashCube OS` : "ClashCube OS";
   const workspace = $(".workspace");
   if (workspace && options.scroll !== false) {
     workspace.scrollTo({ top: 0, behavior: options.instant ? "auto" : "smooth" });
   }
-  if (options.syncHash !== false && window.location.hash !== `#${moduleId}`) {
-    history.replaceState(null, "", `#${moduleId}`);
+  if (options.syncRoute !== false) {
+    syncBrowserRoute(moduleId, { replace: Boolean(options.replace) });
   }
   if (moduleId === "config") {
     updateConfigModelApiKeyVisibility();
@@ -1986,6 +2052,22 @@ function closeConfirm() {
     confirmModal.classList.remove("open");
     confirmModal.setAttribute("aria-hidden", "true");
   }
+}
+
+function closeTopLayer() {
+  if ($("#confirm-modal")?.classList.contains("open")) {
+    closeConfirm();
+    return true;
+  }
+  if ($("#template-detail-modal")?.classList.contains("open")) {
+    closeTemplateDetail();
+    return true;
+  }
+  if ($("#create-workflow-modal")?.classList.contains("open")) {
+    closeCreateWorkflowModal();
+    return true;
+  }
+  return false;
 }
 
 function openTemplateDetail(template) {
@@ -2033,17 +2115,17 @@ function renderCreateWorkflowIndustryOptions() {
   const select = $("#create-workflow-industry");
   if (!select) return;
   const enabledIndustries = new Set(activePlan().industries);
-  const options = [
-    `<option value="all">全部行业</option>`,
-    ...industries
+  const availableOptions = industries
     .filter(([industryKey]) => enabledIndustries.has(industryKey))
-    .map(([industryKey, label]) => `<option value="${escapeHtml(industryKey)}">${escapeHtml(label)}</option>`),
-  ].join("");
-  select.innerHTML = options || `<option value="all">全部行业</option>`;
+    .map(([industryKey, label]) => ({ value: industryKey, label }));
+  select.innerHTML = availableOptions.length
+    ? availableOptions.map((item) => `<option value="${escapeHtml(item.value)}">${escapeHtml(item.label)}</option>`).join("")
+    : `<option value="">当前订阅暂无可用行业</option>`;
   if (state.createWorkflowDraft.industry && enabledIndustries.has(state.createWorkflowDraft.industry)) {
     select.value = state.createWorkflowDraft.industry;
   } else {
-    select.value = "all";
+    select.value = availableOptions[0]?.value || "";
+    state.createWorkflowDraft.industry = select.value;
   }
   const triggerLabel = $("#create-industry-select-trigger span");
   if (triggerLabel) triggerLabel.textContent = industryName(select.value);
@@ -2056,14 +2138,11 @@ function renderCreateWorkflowIndustryOptions() {
   }
   const menu = $("#create-industry-select-menu");
   if (menu) {
-    const menuOptions = [
-      { value: "all", label: "全部行业", disabled: false },
-      ...industries
-        .filter(([industryKey]) => enabledIndustries.has(industryKey))
-        .map(([industryKey, label]) => ({ value: industryKey, label, disabled: false })),
-    ];
+    const menuOptions = availableOptions.length
+      ? availableOptions.map((item) => ({ ...item, disabled: false }))
+      : [{ value: "", label: "当前订阅暂无可用行业", disabled: true }];
     menu.innerHTML = menuOptions.map((item) => (
-      `<button class="custom-select-option ${item.value === select.value ? "active" : ""}" type="button" data-create-industry-value="${escapeHtml(item.value)}">${escapeHtml(item.label)}</button>`
+      `<button class="custom-select-option ${item.value === select.value ? "active" : ""}" type="button" data-create-industry-value="${escapeHtml(item.value)}" ${item.disabled ? "disabled" : ""}>${escapeHtml(item.label)}</button>`
     )).join("");
   }
 }
@@ -2095,11 +2174,15 @@ function renderCreateWorkflowSteps() {
   }).join("");
 }
 
-function createDefaultWorkflowDraft(industryKey = "all") {
-  const normalizedIndustry = industryKey && industryKey !== "all" ? industryKey : "all";
+function createDefaultWorkflowDraft(industryKey = state.industry) {
+  const plan = activePlan();
+  const fallbackIndustry = plan.industries[0] || industries[0]?.[0] || "";
+  const normalizedIndustry = industryKey && industryKey !== "all" && plan.industries.includes(industryKey)
+    ? industryKey
+    : fallbackIndustry;
   return {
     editingTemplateId: "",
-    industry: normalizedIndustry || "all",
+    industry: normalizedIndustry,
     title: "",
     description: "",
     steps: [],
@@ -2122,7 +2205,7 @@ function syncCreateWorkflowIconUi() {
     img.removeAttribute("src");
     img.hidden = true;
     placeholder.hidden = false;
-    placeholder.innerHTML = `<span class="template-card-icon-default">${TEMPLATE_ICON_SVG_MINE}</span>`;
+    placeholder.innerHTML = TEMPLATE_ICON_LOGO_MARKUP;
   }
 }
 
@@ -2162,7 +2245,7 @@ function closeCreateWorkflowModal() {
   $("#create-workflow-modal")?.setAttribute("aria-hidden", "true");
   const iconFile = $("#create-workflow-icon-file");
   if (iconFile) iconFile.value = "";
-  state.createWorkflowDraft = createDefaultWorkflowDraft("all");
+  state.createWorkflowDraft = createDefaultWorkflowDraft();
 }
 
 function applyTemplate(templateId) {
@@ -2186,7 +2269,7 @@ function applyTemplate(templateId) {
     state.workflowDockIndustry = ind;
   }
   setCollaborationTemplateSourceUI(template.source === "mine" ? "mine" : "platform");
-  form.execution_style.value = template.executionStyle || "balanced";
+  form.execution_style.value = template.executionStyle || "fast";
   form.project_name.value = template.projectName || "";
   form.objective.value = template.objective || "";
   updateCollaborationDockGate();
@@ -2267,8 +2350,13 @@ function localCommandSummary(payload) {
 }
 
 function localDiscussionSummary(payload) {
+  const participants = payload.participant_assignments?.length
+    ? payload.participant_assignments.map((item) => `${item.node_title || item.node_id}（${item.role}）`)
+    : payload.participant_roles?.length
+      ? payload.participant_roles
+      : payload.participant_node_ids;
   return [
-    `参与节点：${payload.participant_node_ids.join("、")}`,
+    `参与节点：${participants.join("、")}`,
     `讨论次数：${payload.rounds}`,
     "本地结论：已建立讨论任务，建议由复核节点汇总风险、由执行节点补齐可执行动作。",
     `话题：${payload.topic.slice(0, 160)}`,
@@ -2333,10 +2421,10 @@ function saveCurrentTemplate() {
     industry: industryKey,
     source: "mine",
     title: values.project_name?.trim() || `我的${industryName(industryKey)}模板`,
-    description: `执行风格：${values.execution_style || "balanced"}。`,
+    description: `执行风格：${values.execution_style || "fast"}。`,
     projectName: values.project_name?.trim() || `${industryName(industryKey)}自定义项目`,
     objective,
-    executionStyle: values.execution_style || "balanced",
+    executionStyle: values.execution_style || "fast",
   };
   state.localTemplates.unshift(template);
   state.templateFilter = "mine";
@@ -2358,7 +2446,7 @@ function switchPlan(planId) {
     state.workflowDockIndustry = "";
   }
   renderAll();
-  addResult("订阅", `已切换到 ${plan.name}`, `开放行业 ${plan.industries.length} 个，额度 ${plan.used} / ${plan.quota}。`, plan);
+  addResult("订阅", `已切换到 ${plan.name}`, `开放行业 ${plan.industries.length} 个，Token ${plan.used} / ${plan.quota}。`, plan);
   toast(`已切换到 ${plan.name} 方案。`);
 }
 
@@ -2373,7 +2461,7 @@ function wireForms() {
       return;
     }
     const targetRole = state.nodes[0]?.role || "assistant";
-    const executionStyle = values.execution_style || "balanced";
+    const executionStyle = values.execution_style || "fast";
     const payload = {
       target_type: "role",
       target_value: targetRole,
@@ -2463,7 +2551,7 @@ function wireForms() {
     const payload = {
       industry: industryKey,
       workflow_key: "default",
-      execution_style: values.execution_style || "balanced",
+      execution_style: values.execution_style || "fast",
       project_name: values.project_name?.trim() || `${industryName(industryKey)}项目`,
       objective,
       workflow_template,
@@ -2492,18 +2580,34 @@ function wireForms() {
     const form = event.currentTarget;
     const values = formJson(form);
     const selected = Array.from(form.querySelectorAll('input[name="participant_node_ids"]:checked')).map((input) => input.value);
+    const assignments = selected.map((nodeId) => {
+      const node = state.nodes.find((item) => item.node_id === nodeId);
+      const rawRole = values[`participant_role_${nodeId}`];
+      const role = String(Array.isArray(rawRole) ? rawRole[0] : rawRole || "").trim();
+      return {
+        node_id: nodeId,
+        node_title: node ? overviewNodeCardTitle(node) : nodeId,
+        role,
+      };
+    });
     if (!values.topic?.trim() || !selected.length) {
       toast("请填写讨论话题并选择参与节点。", "error");
+      return;
+    }
+    if (assignments.some((item) => !item.role)) {
+      toast("请为每个已选节点填写职业描述。", "error");
       return;
     }
     const payload = {
       topic: values.topic.trim(),
       participant_node_ids: selected,
+      participant_roles: assignments.map((item) => item.role),
+      participant_assignments: assignments,
       rounds: Number(values.rounds || 2),
     };
     openConfirm({
       title: "发起讨论",
-      body: "将按所选节点与讨论次数发起多节点讨论。",
+      body: "将按所选节点、对应职业描述与讨论次数发起多节点讨论。",
       payload,
       onConfirm: async () => {
         let result = null;
@@ -2740,6 +2844,10 @@ function wireUi() {
   });
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
+    if (closeTopLayer()) {
+      event.preventDefault();
+      return;
+    }
     $("#industry-custom-select")?.classList.remove("open");
     $("#industry-select-trigger")?.setAttribute("aria-expanded", "false");
     $("#create-industry-custom-select")?.classList.remove("open");
@@ -2834,7 +2942,7 @@ function wireUi() {
   });
   $(".workspace")?.addEventListener("scroll", maybeLoadMorePlatformTemplates);
   $("#create-workflow-button")?.addEventListener("click", () => {
-    state.createWorkflowDraft = createDefaultWorkflowDraft("all");
+    state.createWorkflowDraft = createDefaultWorkflowDraft(state.industry);
     openCreateWorkflowModal();
   });
   $("#add-create-step")?.addEventListener("click", () => {
@@ -2971,7 +3079,7 @@ function wireUi() {
       description,
       projectName: `${title}项目`,
       objective: description,
-      executionStyle: "balanced",
+      executionStyle: "fast",
       steps,
     };
     const iconUrl = String(state.createWorkflowDraft.iconDataUrl || "").trim();
@@ -3075,7 +3183,7 @@ function wireUi() {
       }
       openConfirm({
         title: `切换到 ${plan.name}`,
-        body: "这会更新当前额度、开放行业和工作台可选行业。",
+        body: "这会更新当前 Token、开放行业和工作台可选行业。",
         payload: plan,
         confirmText: "确认切换",
         onConfirm: async () => switchPlan(plan.id),
@@ -3179,9 +3287,9 @@ function wireUi() {
       const id = overviewRun.dataset.overviewRunId;
       const run = state.workflowRuns.find((item) => item.id === id);
       if (run) {
+        state.activeWorkflowRunId = run.id;
         jumpTo("projects");
         renderWorkflowRuns();
-        renderWorkflowRunDetail(run);
       }
     }
 
@@ -3208,8 +3316,13 @@ function wireUi() {
     }
   });
 
+  window.addEventListener("popstate", () => {
+    switchModule(moduleIdFromLocation(), { syncRoute: false, instant: true, scroll: false });
+  });
+
   window.addEventListener("hashchange", () => {
-    switchModule(window.location.hash.slice(1), { syncHash: false });
+    const moduleId = moduleIdFromLocation();
+    switchModule(moduleId, { replace: true, instant: true, scroll: false });
   });
 
   document.addEventListener("keydown", (event) => {
@@ -3220,9 +3333,9 @@ function wireUi() {
     const id = row.dataset.overviewRunId;
     const run = state.workflowRuns.find((item) => item.id === id);
     if (!run) return;
+    state.activeWorkflowRunId = run.id;
     jumpTo("projects");
     renderWorkflowRuns();
-    renderWorkflowRunDetail(run);
   });
 
   $("#confirm-submit")?.addEventListener("click", async () => {
@@ -3243,5 +3356,13 @@ seedDemoWorkflowRuns();
 wireUi();
 wireForms();
 renderAll();
-switchModule(window.location.hash.slice(1) || "overview", { syncHash: false, instant: true, scroll: false });
+switchModule(moduleIdFromLocation(), { replace: true, instant: true, scroll: false });
+window.ClashCubeOS = {
+  routes: moduleRoutes.map((route) => ({ ...route })),
+  get activeModule() {
+    return state.activeModule;
+  },
+  navigate: jumpTo,
+  render: renderAll,
+};
 loadData();
