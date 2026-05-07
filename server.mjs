@@ -1,8 +1,9 @@
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = new URL(".", import.meta.url).pathname;
+const root = fileURLToPath(new URL(".", import.meta.url));
 const target = process.env.OPENCLAW_API || "http://192.168.5.190:8000";
 const port = Number(process.env.PORT || 4175);
 const host = process.env.HOST || "0.0.0.0";
