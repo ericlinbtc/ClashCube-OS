@@ -1,9 +1,12 @@
 import { createServer } from "node:http";
+import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const root = fileURLToPath(new URL(".", import.meta.url));
+const projectRoot = fileURLToPath(new URL(".", import.meta.url));
+const buildRoot = join(projectRoot, "dist");
+const root = existsSync(join(buildRoot, "index.html")) ? buildRoot : projectRoot;
 const target = process.env.OPENCLAW_API || "http://192.168.5.190:8000";
 const port = Number(process.env.PORT || 4175);
 const host = process.env.HOST || "0.0.0.0";

@@ -1,13 +1,12 @@
-const API_BASE = window.location.protocol === "file:"
-  ? "http://192.168.5.190:8000"
-  : "/api";
+const API_BASE = window.ClashCubeRuntime?.config?.apiBase
+  || (window.location.protocol === "file:" ? "http://192.168.5.190:8000" : "/api");
 
 /** 为 true 时不拉取 healthz/nodes/workflows，仅用页面内模拟数据；地址栏加 ?controller=1 可连接真实控制器 */
 const USE_LOCAL_DEMO_DATA_ONLY = (() => {
   try {
     if (new URLSearchParams(window.location.search).get("controller") === "1") return false;
   } catch (_) {}
-  return true;
+  return window.ClashCubeRuntime?.config?.useLocalDemoData ?? true;
 })();
 
 const industries = [
